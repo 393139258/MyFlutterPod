@@ -1,61 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<String> lists = ["第一盒", "第二盒", "第三盒"];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  static const eventChannel = EventChannel('com.nativeToFlutter');
+
+  @override
+  void initState() {
+    super.initState();
+
+    eventChannel.receiveBroadcastStream().listen(_getData, onError: _getError);
   }
+
+  void _getData(dynamic data) {
+    String OCString = data.toString();
+    if (OCString.length != 0) {
+      setState(() {
+        lists.add(OCString);
+      });
+    }
+  }
+
+  void _getError(Object error) {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '你点击了$_counter次',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      body: Container(
+        color: Colors.white,
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return _buildListViewCell(index, lists[index]);
+          },
+          itemCount: lists.length,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildListViewCell(int index, String title) {
+    return Container(
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: Text(title),
+            margin: EdgeInsets.only(left: 15),
+          ),
+          Container(
+            child: Text("第${index}条数据"),
+            margin: EdgeInsets.only(right: 15),
+          ),
+        ],
+      ),
     );
   }
 }
