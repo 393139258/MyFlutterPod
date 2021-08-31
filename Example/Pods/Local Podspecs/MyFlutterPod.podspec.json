@@ -1,0 +1,22 @@
+{
+  "name": "MyFlutterPod",
+  "version": "0.1.0",
+  "summary": "A short description of MyFlutterPod.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/393139258/MyFlutterPod",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "393139258": "393139258@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/393139258/MyFlutterPod.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "MyFlutterPod/Classes/**/*"
+}
