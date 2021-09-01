@@ -64,10 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void newTexture() async {
     daTextureId = await _methodChannel.invokeMethod("create", {
-      'img': 'icon_app.png', //本地图片名
+      'img': 'icon_app', //本地图片名
       'width': 60,
       'height': 60,
-      'asGif': true,
+      'asGif': false,
     });
     setState(() {});
   }
