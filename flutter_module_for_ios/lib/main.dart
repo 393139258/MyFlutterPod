@@ -27,6 +27,9 @@ class _MyHomePageState extends State<MyHomePage> {
   static const MethodChannel _methodChannel =
       const MethodChannel("com.flutterToNative");
 
+  //系统返回的正常id会大于等于0, -1则可以认为 还未加载纹理
+  int daTextureId = -1;
+
   void flutterGetBatteryLevel() async {
     String batteryLevel;
     try {
@@ -46,16 +49,46 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
+    //接受原生回传的参数
     eventChannel.receiveBroadcastStream().listen(_getData, onError: _getError);
+    newTexture();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (daTextureId >= 0) {
+      _methodChannel.invokeMethod('dispose', {'textureId': daTextureId});
+    }
+  }
+
+  void newTexture() async {
+    daTextureId = await _methodChannel.invokeMethod("create", {
+      'img': 'icon_app.png', //本地图片名
+      'width': 60,
+      'height': 60,
+      'asGif': true,
+    });
+    setState(() {});
+  }
+
+  //显示图片的widget
+  Widget getTextureBody(BuildContext context) {
+    return Container(
+      width: 60,
+      height: 60,
+      child: Texture(
+        textureId: daTextureId,
+      ),
+    );
   }
 
   void _getData(dynamic data) {
     // UserInfoModel userM = UserInfoModel.fromJson(data);
-
-    String OCString = data.toString();
-    if (OCString.length != 0) {
+    String ocString = data.toString();
+    if (ocString.length != 0) {
       setState(() {
-        lists.add(OCString);
+        lists.add(ocString);
       });
     }
   }
@@ -78,16 +111,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildListViewCell(int index, String title) {
+    Widget imageTexture =
+        daTextureId >= 0 ? getTextureBody(context) : Text('load');
     return InkWell(
       onTap: flutterGetBatteryLevel,
       child: Container(
-        height: 60,
+        height: 80,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              child: Text(title),
-              margin: EdgeInsets.only(left: 15),
+            Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  child: imageTexture,
+                ),
+                Container(
+                  child: Text(title),
+                  margin: EdgeInsets.only(left: 15),
+                ),
+              ],
             ),
             Container(
               child: Text("第${index}条数据"),
