@@ -27,21 +27,20 @@ class _MyHomePageState extends State<MyHomePage> {
   static const MethodChannel _methodChannel =
       const MethodChannel("com.flutterToNative");
 
-  //系统返回的正常id会大于等于0, -1则可以认为 还未加载纹理
-  int daTextureId = -1;
+  int textureId = -1;
 
-  void flutterGetBatteryLevel() async {
-    String batteryLevel;
+  void flutterGetOcMethod() async {
+    String userInfo;
     try {
       final String result =
-          await _methodChannel.invokeMethod('getBatteryLevel', 'jason');
-      batteryLevel = result;
+          await _methodChannel.invokeMethod('dealWithMyName', 'jason');
+      userInfo = result;
     } catch (e) {
-      batteryLevel = 'Failed to get battery level.';
+      userInfo = 'Failed to deal.';
     }
 
     setState(() {
-      lists.add(batteryLevel);
+      lists.add(userInfo);
     });
   }
 
@@ -57,14 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
-    if (daTextureId >= 0) {
-      _methodChannel.invokeMethod('dispose', {'textureId': daTextureId});
+    if (textureId >= 0) {
+      _methodChannel.invokeMethod('disposeTexture', {'textureId': textureId});
     }
   }
 
   void newTexture() async {
-    daTextureId = await _methodChannel.invokeMethod("create", {
-      'img': 'icon_app', //本地图片名
+    textureId = await _methodChannel.invokeMethod("createImage", {
+      'img': 'icon_app', //本地图片名, 或者url
       'width': 60,
       'height': 60,
       'asGif': false,
@@ -78,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       width: 60,
       height: 60,
       child: Texture(
-        textureId: daTextureId,
+        textureId: textureId,
       ),
     );
   }
@@ -112,9 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildListViewCell(int index, String title) {
     Widget imageTexture =
-        daTextureId >= 0 ? getTextureBody(context) : Text('load');
+        textureId >= 0 ? getTextureBody(context) : Text('load');
     return InkWell(
-      onTap: flutterGetBatteryLevel,
+      onTap: flutterGetOcMethod,
       child: Container(
         height: 80,
         child: Row(
