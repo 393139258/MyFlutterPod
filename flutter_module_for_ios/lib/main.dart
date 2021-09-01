@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ios_platform_images/ios_platform_images.dart';
 
 void main() => runApp(MyApp());
 
@@ -135,18 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Container(
-              child: Column(
-                children: [
-                  Text("第$index条数据"),
-                  Container(
-                    width: 30,
-                    height: 30,
-                    child: Image(
-                      image: IosPlatformImages.load("icon_app"),
-                    ),
-                  ),
-                ],
-              ),
+              child: Text("第$index条数据"),
               margin: EdgeInsets.only(right: 15),
             ),
           ],
