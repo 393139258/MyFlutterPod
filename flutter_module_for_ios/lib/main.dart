@@ -28,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
       const MethodChannel("com.flutterToNative");
 
   int textureId = -1;
+  int chooseTextureId = -1;
 
   void flutterGetOcMethod(int index) async {
     if (index == 0) {
@@ -103,13 +104,29 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _getData(dynamic data) {
-    // UserInfoModel userM = UserInfoModel.fromJson(data);
-    String ocString = data.toString();
-    if (ocString.length != 0) {
+    UserInfoModel userM = UserInfoModel.fromJson(data);
+    if (userM.type == "0") {
+      String ocString = "姓名: ${userM.name}, 城市: ${userM.city}";
+      if (ocString.length != 0) {
+        setState(() {
+          lists.add(ocString);
+        });
+      }
+    } else if (userM.type == "1") {
+      //用户选择的图片
       setState(() {
-        lists.add(ocString);
+        chooseTextureId = int.parse(userM.texture!);
       });
     }
+  }
+
+  //显示用户从相册选择的图片
+  Widget showUserChooseFromAlbum() {
+    return Container(
+      width: 40,
+      height: 40,
+      child: Texture(textureId: chooseTextureId),
+    );
   }
 
   void _getError(Object error) {}
@@ -156,9 +173,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            Container(
-              child: Text("第$index条数据"),
-              margin: EdgeInsets.only(right: 15),
+            Row(
+              children: [
+                index == 0
+                    ? (chooseTextureId >= 0
+                        ? showUserChooseFromAlbum()
+                        : Container())
+                    : Container(),
+                Container(
+                  child: Text("$index"),
+                  margin: EdgeInsets.only(right: 15),
+                ),
+              ],
             ),
           ],
         ),
@@ -169,10 +195,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class UserInfoModel {
   String? name;
-  String? age;
-  UserInfoModel({this.name, this.age});
+  String? city;
+  String? type;
+  String? texture;
+  UserInfoModel({this.name, this.city, this.type, this.texture});
   UserInfoModel.fromJson(Map<String, dynamic> json) {
     this.name = json["name"];
-    this.age = json["age"];
+    this.city = json["city"];
+    this.type = json["type"];
+    this.texture = json["texture"];
   }
 }
