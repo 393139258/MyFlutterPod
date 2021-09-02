@@ -132,20 +132,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Container(
-                child: ListView.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildListViewCell(index, lists[index]);
-                  },
-                  itemCount: lists.length,
-                ),
-              ),
-              showNativeView(),
-            ],
-          )),
+        color: Colors.white,
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            if (index == 3) {
+              return showNativeView();
+            } else {
+              return _buildListViewCell(index, lists[index]);
+            }
+          },
+          itemCount: lists.length,
+        ),
+      ),
     );
   }
 

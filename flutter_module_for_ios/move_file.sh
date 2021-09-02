@@ -43,6 +43,7 @@ cp -r build/ios/Release-iphoneos/*/*.framework $out
 #cp -r .ios/Flutter/App.framework $out
 #cp -r .ios/Flutter/engine/Flutter.framework $out
 cp -r build/ios/Release-iphoneos/*.framework $out
+cp -r build/ios/Release-iphoneos/*/*/*.framework $out
 
 echo "复制framework库到临时文件夹: $out"
 
