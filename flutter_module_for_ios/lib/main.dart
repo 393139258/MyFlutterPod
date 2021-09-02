@@ -30,15 +30,17 @@ class _MyHomePageState extends State<MyHomePage> {
   int textureId = -1;
 
   void flutterGetOcMethod(int index) async {
-    switch (index) {
-      case 0:
-        chooseImages();
-        break;
-      case 1:
-        addLine();
-        break;
-      default:
+    if (index == 0) {
+      chooseImages();
+    } else if (index == 1) {
+      addLine();
+    } else {
+      otherMethod();
     }
+  }
+
+  void otherMethod() {
+    _methodChannel.invokeMethod("otherMethod");
   }
 
   //调用原生的图片选择
@@ -132,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildListViewCell(int index, String title) {
     Widget imageTexture =
         textureId >= 0 ? getTextureBody(context) : Text('load');
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         flutterGetOcMethod(index);
       },
@@ -155,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Container(
-              child: Text("第$index条********数据"),
+              child: Text("第$index条数据"),
               margin: EdgeInsets.only(right: 15),
             ),
           ],
