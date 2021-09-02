@@ -18,7 +18,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> lists = ["第一盒", "第二盒", "第三盒"];
+  List<String> lists = ["点击选择图片", "增加一行", "第三盒"];
 
   //用户原生传递消息过来
   static const eventChannel = EventChannel('com.nativeToFlutter');
@@ -29,7 +29,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int textureId = -1;
 
-  void flutterGetOcMethod() async {
+  void flutterGetOcMethod(int index) async {
+    switch (index) {
+      case 0:
+        chooseImages();
+        break;
+      case 1:
+        addLine();
+        break;
+      default:
+    }
+  }
+
+  //调用原生的图片选择
+  void chooseImages() {
+    _methodChannel.invokeMethod("popImagePicker");
+  }
+
+  //增加一行
+  void addLine() async {
     String userInfo;
     try {
       final String result =
@@ -109,11 +127,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  //
+
   Widget _buildListViewCell(int index, String title) {
     Widget imageTexture =
         textureId >= 0 ? getTextureBody(context) : Text('load');
-    return InkWell(
-      onTap: flutterGetOcMethod,
+    return GestureDetector(
+      onTap: () {
+        flutterGetOcMethod(index);
+      },
       child: Container(
         height: 80,
         child: Row(
@@ -133,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Container(
-              child: Text("第$index条数据"),
+              child: Text("第$index条********数据"),
               margin: EdgeInsets.only(right: 15),
             ),
           ],
