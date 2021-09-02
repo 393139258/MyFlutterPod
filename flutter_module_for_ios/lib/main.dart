@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -68,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
     //接受原生回传的参数
     eventChannel.receiveBroadcastStream().listen(_getData, onError: _getError);
     newTexture();
@@ -92,23 +92,28 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  //显示图片的widget
-  Widget getTextureBody(BuildContext context) {
-    return Container(
-      width: 60,
-      height: 60,
-      child: Texture(
-        textureId: textureId,
-      ),
-    );
+  //根据纹理来构造图片视图
+  Widget createImageFromTexture(int textureId, double wh) {
+    return textureId >= 0
+        ? Container(
+            width: wh,
+            height: wh,
+            child: Texture(
+              textureId: textureId,
+            ),
+            margin: EdgeInsets.only(right: 15),
+          )
+        : Container();
   }
 
+  //native有数据传过来时，会主动调用此方法
   void _getData(dynamic data) {
-    UserInfoModel userM = UserInfoModel.fromJson(data);
+    NativeDataModel userM = NativeDataModel.fromJson(data);
     if (userM.type == "0") {
       String ocString = "姓名: ${userM.name}, 城市: ${userM.city}";
       if (ocString.length != 0) {
         setState(() {
+          //增加列表的数据
           lists.add(ocString);
         });
       }
@@ -120,37 +125,47 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  //显示用户从相册选择的图片
-  Widget showUserChooseFromAlbum() {
-    return Container(
-      width: 40,
-      height: 40,
-      child: Texture(textureId: chooseTextureId),
-    );
-  }
-
+  //错误处理, 可以不用管
   void _getError(Object error) {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return _buildListViewCell(index, lists[index]);
-          },
-          itemCount: lists.length,
-        ),
-      ),
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                child: ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildListViewCell(index, lists[index]);
+                  },
+                  itemCount: lists.length,
+                ),
+              ),
+              showNativeView(),
+            ],
+          )),
     );
   }
 
-  //
+  Widget showNativeView() {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return UiKitView(
+        viewType: "webview",
+        creationParams: {"showType": "1"},
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+    } else {
+      return AndroidView(
+        viewType: "webview",
+        creationParams: {"showType": "1"},
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+    }
+  }
 
   Widget _buildListViewCell(int index, String title) {
-    Widget imageTexture =
-        textureId >= 0 ? getTextureBody(context) : Text('load');
     return InkWell(
       onTap: () {
         flutterGetOcMethod(index);
@@ -162,11 +177,16 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Row(
               children: [
+                //列表的索引
                 Container(
-                  width: 60,
-                  height: 60,
-                  child: imageTexture,
+                  child: Text("$index",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  margin: EdgeInsets.only(left: 12),
                 ),
+                //选择的图片
+                createImageFromTexture(textureId, 60),
+                //标题
                 Container(
                   child: Text(title),
                   margin: EdgeInsets.only(left: 15),
@@ -176,14 +196,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               children: [
                 index == 0
-                    ? (chooseTextureId >= 0
-                        ? showUserChooseFromAlbum()
-                        : Container())
+                    ? createImageFromTexture(chooseTextureId, 40)
                     : Container(),
-                Container(
-                  child: Text("$index"),
-                  margin: EdgeInsets.only(right: 15),
-                ),
               ],
             ),
           ],
@@ -193,13 +207,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class UserInfoModel {
-  String? name;
-  String? city;
-  String? type;
-  String? texture;
-  UserInfoModel({this.name, this.city, this.type, this.texture});
-  UserInfoModel.fromJson(Map<dynamic, dynamic> json) {
+//对OC传过来的数据进行模型转换
+class NativeDataModel {
+  String? name; //姓名
+  String? city; //城市
+  String? type; //用类型来区分不同的数据
+  String? texture; //用户选择的图片纹理
+  NativeDataModel({this.name, this.city, this.type, this.texture});
+  NativeDataModel.fromJson(Map<dynamic, dynamic> json) {
     this.name = json["name"];
     this.city = json["city"];
     this.type = json["type"];
