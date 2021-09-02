@@ -199,7 +199,7 @@ class UserInfoModel {
   String? type;
   String? texture;
   UserInfoModel({this.name, this.city, this.type, this.texture});
-  UserInfoModel.fromJson(Map<String, dynamic> json) {
+  UserInfoModel.fromJson(Map<dynamic, dynamic> json) {
     this.name = json["name"];
     this.city = json["city"];
     this.type = json["type"];
