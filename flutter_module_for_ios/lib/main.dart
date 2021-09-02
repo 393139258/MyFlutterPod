@@ -149,10 +149,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget showNativeView() {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return UiKitView(
-        viewType: "webview",
-        creationParams: {"showType": "1"},
-        creationParamsCodec: const StandardMessageCodec(),
+      return Container(
+        color: Colors.red,
+        width: 100,
+        height: 100,
+        child: UiKitView(
+          viewType: "webview",
+          creationParams: {"showType": "1"},
+          creationParamsCodec: const StandardMessageCodec(),
+        ),
       );
     } else {
       return AndroidView(
