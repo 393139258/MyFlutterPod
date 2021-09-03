@@ -11,22 +11,22 @@ pod 'MyFlutterPod',:git=>'https://github.com/393139258/MyFlutterPod.git'
 
 ## 使用
 
-以下使用方式不是必须要flutter环境
-使用方式:
-1.编辑Podfile
-pod 'MyFlutterPod',:git=>'https://github.com/393139258/MyFlutterPod.git'
-2.把OCFile文件夹代码拖入OC工程中
-3.修改info.plist 
-	增加key  io.flutter.embedded_views_preview   bool   YES
-4.AppDelegate 继承自FlutterAppDelegate即可， 不需要额外代码
-5.跳转（随便在那里增加跳转）
-YMFlutterViewController *flutterVc = [[YMFlutterViewController alloc] init];
-flutterVc.view.backgroundColor = [UIColor whiteColor];
-[self.navigationController pushViewController:flutterVc animated:YES];
+以下使用方式不是必须要flutter环境  
+使用方式:  
+1.编辑Podfile  
+pod 'MyFlutterPod',:git=>'https://github.com/393139258/MyFlutterPod.git'  
+2.把OCFile文件夹代码拖入OC工程中  
+3.修改info.plist   
+	增加key  io.flutter.embedded_views_preview   bool   YES  
+4.AppDelegate 继承自FlutterAppDelegate即可， 不需要额外代码  
+5.跳转（随便在那里增加跳转）  
+YMFlutterViewController *flutterVc = [[YMFlutterViewController alloc] init];  
+flutterVc.view.backgroundColor = [UIColor whiteColor];  
+[self.navigationController pushViewController:flutterVc animated:YES];  
 
 ## Author
 
-393139258, 393139258@qq.com
+393139258@qq.com
 
 ## License
 
