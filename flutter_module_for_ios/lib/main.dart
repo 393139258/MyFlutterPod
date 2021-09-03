@@ -155,13 +155,17 @@ class _MyHomePageState extends State<MyHomePage> {
         width: 100,
         height: 100,
         child: UiKitView(
+          //约定的key, 只要统一就行
           viewType: "webview",
+          //flutter传给native的参数
           creationParams: {"showType": "1"},
+          //参数的编码方式， 要与参数类型同一
           creationParamsCodec: const JSONMessageCodec(),
         ),
       );
     } else {
       return AndroidView(
+        //参数说明同iOS
         viewType: "webview",
         creationParams: {"showType": "1"},
         creationParamsCodec: const JSONMessageCodec(),
@@ -186,14 +190,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text("$index",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  margin: EdgeInsets.only(left: 12),
+                  margin: EdgeInsets.only(left: 12, right: 15),
                 ),
                 //选择的图片
                 createImageFromTexture(textureId, 60),
                 //标题
                 Container(
                   child: Text(title),
-                  margin: EdgeInsets.only(left: 15),
                 ),
               ],
             ),
