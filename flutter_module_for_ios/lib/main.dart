@@ -147,6 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  //显示原生的view
   Widget showNativeView() {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       return Container(

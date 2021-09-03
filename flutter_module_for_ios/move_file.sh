@@ -32,16 +32,10 @@ else
 fi
 
 echo "编译flutter"
-#flutter build ios --debug
-#release下放开下一行注释，注释掉上一行代码
 flutter build ios --release --no-codesign
 echo "编译flutter完成"
 mkdir $out
 cp -r build/ios/Release-iphoneos/*/*.framework $out
-#release下放开下一行注释，注释掉上一行代码
-#cp -r build/ios/Release-iphoneos/*/*.framework $out
-#cp -r .ios/Flutter/App.framework $out
-#cp -r .ios/Flutter/engine/Flutter.framework $out
 cp -r build/ios/Release-iphoneos/*.framework $out
 cp -r build/ios/Release-iphoneos/*/*/*.framework $out
 
