@@ -156,14 +156,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: UiKitView(
           viewType: "webview",
           creationParams: {"showType": "1"},
-          creationParamsCodec: const StandardMessageCodec(),
+          creationParamsCodec: const JSONMessageCodec(),
         ),
       );
     } else {
       return AndroidView(
         viewType: "webview",
         creationParams: {"showType": "1"},
-        creationParamsCodec: const StandardMessageCodec(),
+        creationParamsCodec: const JSONMessageCodec(),
       );
     }
   }
