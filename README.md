@@ -22,8 +22,8 @@ pod 'MyFlutterPod',:git=>'https://github.com/393139258/MyFlutterPod.git'
 5.跳转  
 YMFlutterViewController *flutterVc = [[YMFlutterViewController alloc] init];  
 flutterVc.view.backgroundColor = [UIColor whiteColor];  
-//这一步是去除跳转时加载的默认启动页; 
-flutterVc.splashScreenView = [[UIView alloc] init];
+//这一步是去除跳转时加载的默认启动页<br />
+flutterVc.splashScreenView = [[UIView alloc] init];<br />
 [self.navigationController pushViewController:flutterVc animated:YES];  
 
 ## Author
